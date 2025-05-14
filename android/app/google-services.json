@@ -1,0 +1,97 @@
+{
+  "project_info": {
+    "project_number": "23398760841",
+    "project_id": "aplikasi-kedua1",
+    "storage_bucket": "aplikasi-kedua1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23398760841:android:ff289bc04a34b99cd82158",
+        "android_client_info": {
+          "package_name": "com.example.aplikasi_kedua"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "23398760841-1ls5qp032nuk0vhs8v6r2qvvabrem3iq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWd_CR133n_dFr86BtT12agsFZO20G9bw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "23398760841-1ls5qp032nuk0vhs8v6r2qvvabrem3iq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23398760841:android:2c93c5802512d451d82158",
+        "android_client_info": {
+          "package_name": "com.example.kostgo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "23398760841-1ls5qp032nuk0vhs8v6r2qvvabrem3iq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWd_CR133n_dFr86BtT12agsFZO20G9bw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "23398760841-1ls5qp032nuk0vhs8v6r2qvvabrem3iq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23398760841:android:a318346efede7d36d82158",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "23398760841-1ls5qp032nuk0vhs8v6r2qvvabrem3iq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWd_CR133n_dFr86BtT12agsFZO20G9bw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "23398760841-1ls5qp032nuk0vhs8v6r2qvvabrem3iq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
