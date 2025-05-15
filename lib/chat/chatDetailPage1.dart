@@ -1,16 +1,15 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:kostgo/chat/chatPage1.dart';
-
 
 class ChatDetailPage extends StatefulWidget {
+  const ChatDetailPage({Key? key}) : super(key: key);
+
   @override
-  _ChatDetailPageState1 createState() => _ChatDetailPageState1();
+  State<ChatDetailPage> createState() => _ChatDetailPage1State();
 }
 
-class _ChatDetailPageState1 extends State<ChatDetailPage> {
+class _ChatDetailPage1State extends State<ChatDetailPage> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool _isSending = false;
@@ -64,14 +63,15 @@ class _ChatDetailPageState1 extends State<ChatDetailPage> {
   }
 
   Future<void> _sendMessage() async {
-    final text = _messageController.text.trim();
-    if (text.isEmpty || uid == null || role == null) return;
+    if (_messageController.text.trim().isEmpty || uid == null || role == null) return;
 
     setState(() {
       _isSending = true;
     });
 
     try {
+      final text = _messageController.text.trim();
+      
       final messageData = {
         'text': text,
         'senderUID': uid,
@@ -82,7 +82,6 @@ class _ChatDetailPageState1 extends State<ChatDetailPage> {
       final chatDocRef =
           _firestore.collection('buyer_seller_global').doc('global_chat');
 
-      // Update last message metadata
       await chatDocRef.set({
         'lastMessage': text,
         'lastMessageTime': FieldValue.serverTimestamp(),
@@ -90,15 +89,20 @@ class _ChatDetailPageState1 extends State<ChatDetailPage> {
         if (role == 'seller') 'lastReadBySeller': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
-      // Add to messages subcollection
       await chatDocRef.collection('messages').add(messageData);
-
       _messageController.clear();
     } finally {
       setState(() {
         _isSending = false;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _showTopSheet(BuildContext context) {
@@ -127,7 +131,10 @@ class _ChatDetailPageState1 extends State<ChatDetailPage> {
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    
+                    onTap: () {
+                      Navigator.pop(context);
+                      
+                    },
                     child: Container(
                       height: panelHeight,
                       padding: EdgeInsets.only(
@@ -167,8 +174,7 @@ class _ChatDetailPageState1 extends State<ChatDetailPage> {
                                       title: const Text('Pusat Bantuan',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              color: Color.fromRGBO(
-                                                  0, 45, 95, 1))),
+                                              color: Color.fromRGBO(0, 45, 95, 1))),
                                     ),
                                   ],
                                 ),
@@ -178,14 +184,12 @@ class _ChatDetailPageState1 extends State<ChatDetailPage> {
                           Align(
                             alignment: Alignment.bottomCenter,
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 22),
+                              padding: const EdgeInsets.symmetric(horizontal: 22),
                               child: Container(
                                 height: 5,
                                 width: 30,
                                 decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 215, 209, 209),
+                                  color: const Color.fromARGB(255, 215, 209, 209),
                                   borderRadius: BorderRadius.circular(50),
                                 ),
                               ),
@@ -205,16 +209,7 @@ class _ChatDetailPageState1 extends State<ChatDetailPage> {
   }
 
   @override
-  void dispose() {
-    _messageController.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final currentUID = _auth.currentUser?.uid;
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -227,12 +222,7 @@ class _ChatDetailPageState1 extends State<ChatDetailPage> {
               children: <Widget>[
                 InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatPage(),
-                      ),
-                    );
+                    Navigator.pop(context);
                   },
                   child: const Icon(Icons.arrow_back, color: Colors.black),
                 ),
@@ -247,16 +237,14 @@ class _ChatDetailPageState1 extends State<ChatDetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      const Text(
-                        "Pemilik Kos",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
+                      Text(
+                        role == 'seller' ? "Pemilik Kos" : "Pemilik Kos",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 6),
                       Text(
                         "Online",
-                        style: TextStyle(
-                            color: Colors.grey.shade600, fontSize: 13),
+                        style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
                       ),
                     ],
                   ),
@@ -276,17 +264,24 @@ class _ChatDetailPageState1 extends State<ChatDetailPage> {
             physics: const AlwaysScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               final msg = messages[index];
-              final isMe = msg['senderUID'] == currentUID;
+              final senderRole = msg['senderRole'] ?? 'buyer';
+              final isCurrentUser = senderRole == role;
 
               return Container(
                 padding: const EdgeInsets.only(
-                    left: 14, right: 14, top: 10, bottom: 10),
+                  left: 14, 
+                  right: 14, 
+                  top: 10, 
+                  bottom: 10
+                ),
                 child: Align(
-                  alignment: (isMe ? Alignment.topRight : Alignment.topLeft),
+                  alignment: (isCurrentUser
+                      ? Alignment.topRight
+                      : Alignment.topLeft),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: (isMe
+                      color: (isCurrentUser
                           ? const Color.fromARGB(255, 11, 114, 42)
                           : const Color.fromARGB(255, 6, 65, 154)),
                     ),
@@ -328,7 +323,10 @@ class _ChatDetailPageState1 extends State<ChatDetailPage> {
                                     padding: const EdgeInsets.only(
                                         left: 20, bottom: 20),
                                     child: InkWell(
-                                      
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        
+                                      },
                                       child: const Row(
                                         children: [
                                           Icon(Icons.image),
@@ -369,16 +367,15 @@ class _ChatDetailPageState1 extends State<ChatDetailPage> {
                           color: Colors.white,
                           width: 2.0,
                         ),
-                        boxShadow: [
-                          const BoxShadow(
+                        boxShadow: const [
+                          BoxShadow(
                               color: Colors.black,
                               spreadRadius: 2,
                               blurRadius: 0,
                               offset: Offset(0, 0)),
                         ],
                       ),
-                      child:
-                          const Icon(Icons.add, color: Colors.black, size: 20),
+                      child: const Icon(Icons.add, color: Colors.black, size: 20),
                     ),
                   ),
                   const SizedBox(width: 15),
@@ -386,9 +383,10 @@ class _ChatDetailPageState1 extends State<ChatDetailPage> {
                     child: TextField(
                       controller: _messageController,
                       decoration: const InputDecoration(
-                          hintText: "Write message...",
-                          hintStyle: TextStyle(color: Colors.black54),
-                          border: InputBorder.none),
+                        hintText: "Write message...",
+                        hintStyle: TextStyle(color: Colors.black54),
+                        border: InputBorder.none,
+                      ),
                       onSubmitted: (value) => _sendMessage(),
                     ),
                   ),
@@ -399,8 +397,7 @@ class _ChatDetailPageState1 extends State<ChatDetailPage> {
                         ? const SizedBox(
                             width: 18,
                             height: 18,
-                            child:
-                                CircularProgressIndicator(color: Colors.white))
+                            child: CircularProgressIndicator(color: Colors.white))
                         : const Icon(Icons.send, color: Colors.white, size: 18),
                     backgroundColor: const Color.fromARGB(255, 6, 65, 154),
                     elevation: 0,
