@@ -43,6 +43,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "23398760841-ghbersi1ha8gkf6kvj62u0dn64a8inei.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kostgo",
+            "certificate_hash": "5107520bfdc1daab4936719a7c060a60eb257927"
+          }
+        },
+        {
           "client_id": "23398760841-1ls5qp032nuk0vhs8v6r2qvvabrem3iq.apps.googleusercontent.com",
           "client_type": 3
         }
